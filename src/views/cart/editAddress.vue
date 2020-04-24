@@ -32,7 +32,10 @@ export default {
       this.$router.push("/cart");
     },
     onSave(address) {
-      Toast("save");
+      Toast.loading({
+        message: "正在提交订单...",
+        forbidClick: true
+      });
       console.log(address);
       console.log(sessionStorage.getItem("checkedGoods"));
       const that = this;
@@ -45,10 +48,6 @@ export default {
         recAddress: address.addressDetail
       };
       console.log(data);
-      Toast.loading({
-        message: "正在提交订单...",
-        forbidClick: true
-      });
       this.$axios({
         url: this.$store.state.ORDER_SERVER_API_URL + "/order/insert",
         data: data,

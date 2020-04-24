@@ -64,6 +64,10 @@ export default {
     },
     login() {
       console.log("点击了登录");
+      Toast.loading({
+        message: "正在登陆...",
+        forbidClick: true
+      });
       const that = this;
       const data = {
         data: this.username,
@@ -84,6 +88,7 @@ export default {
             sessionStorage.setItem("nickname", response.data.data.nickname);
             sessionStorage.setItem("username", response.data.data.username);
             sessionStorage.setItem("realname", response.data.data.realname);
+            Toast.clear();
             that.$router.push("/main");
           } else {
             console.log("登录失败");
@@ -98,6 +103,7 @@ export default {
     },
     register() {
       console.log("点击了注册");
+      this.$router.push("/register");
     }
   },
   computed: {},

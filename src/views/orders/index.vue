@@ -2,44 +2,51 @@
   <div>
     <div class="van-nav-style">
       <van-nav-bar
-        title="全部订单"
+        title="订单中心"
         left-text="返回"
         @click-left="onClickLeft"
       ></van-nav-bar>
     </div>
 
-    <van-tabs v-model="active">
-      <van-tab title="待付款">>内容 1</van-tab>
-      <van-tab title="待发货">内容 2</van-tab>
-      <van-tab title="已发货">内容 3</van-tab>
-      <van-tab title="已完成">
-        <van-list
-          v-model="loading"
-          :finished="finished"
-          finished-text="没有更多了"
-          :error.sync="error"
-          error-text="请求失败，点击重新加载"
-          @load="getGoodsList"
-        >
-          <van-card
-            v-for="item in goodsList"
-            num="2"
-            currency=""
-            :key="item.id"
-            :price="formatPrice(item.price * 2)"
-            :desc="item.description"
-            :title="item.productName"
-            :thumb="imgPrefix + item.imgsUrl.toString()"
-            @click="handleClick(item.id)"
-          >
-            <template #footer>
-              <van-button size="mini">评价</van-button>
-              <van-button size="mini" type="danger">再次购买</van-button>
-            </template>
-          </van-card>
-        </van-list>
-      </van-tab>
+    <van-tabs v-show="showTabs" @click="onClick" v-model="active">
+      <van-tab title="待付款"></van-tab>
+      <van-tab title="待发货"></van-tab>
+      <van-tab title="已发货"></van-tab>
+      <van-tab title="已完成"></van-tab>
     </van-tabs>
+
+    <van-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      :error.sync="error"
+      error-text="请求失败，点击重新加载"
+      @load="getOrders"
+    >
+      <van-card
+        v-for="item in goodsList"
+        :num="item.number"
+        currency=""
+        :key="item.productId"
+        :price="formatPrice(item.price * 2)"
+        :desc="item.description"
+        :title="item.productName"
+        :thumb="imgPrefix + item.imgUrl.toString()"
+        @click="handleClick(item.productId)"
+      >
+        <template #footer>
+          <van-button size="mini" @click="onClickEvaluate(item.productId)"
+            >评价</van-button
+          >
+          <van-button
+            size="mini"
+            type="danger"
+            @click="onClickBuyAgain(item.productId)"
+            >再次购买</van-button
+          >
+        </template>
+      </van-card>
+    </van-list>
   </div>
 </template>
 <script>
@@ -51,10 +58,12 @@ import {
   NavBar,
   Button,
   Tab,
-  Tabs
+  Tabs,
+  Toast
 } from "vant";
 export default {
   components: {
+    [Toast.name]: Toast,
     [List.name]: List,
     [Tab.name]: Tab,
     [Tabs.name]: Tabs,
@@ -64,40 +73,37 @@ export default {
     [TabbarItem.name]: TabbarItem,
     [Card.name]: Card
   },
-  mounted() {},
+  mounted() {
+    this.init();
+  },
   data() {
     return {
       goodsList: [],
+      showTabs: true,
       loading: false,
       finished: false,
       error: false,
       imgPrefix: this.$store.state.IMAGES_SERVER_API_URL,
-      active: 3,
+      active: 2,
       current: 1,
       size: 12
     };
   },
   methods: {
-    onClickLeft() {
-      this.$router.push("/user");
+    init() {
+      console.log(this.active);
+      this.active = parseInt(sessionStorage.getItem("QueryOrdersType"));
+      if (sessionStorage.getItem("QueryOrdersType") === "0") {
+        this.showTabs = false;
+      }
     },
-    formatPrice(price) {
-      return "总价：¥" + price.toFixed(2);
-    },
-    getGoodsList() {
+    getOrders() {
       const that = this;
-      const data = {
-        current: this.current,
-        size: this.size
-      };
-      this.axios({
-        url: this.$store.state.PRODUCT_SERVER_API_URL + "/product/get/list",
-        data: data,
-        method: "post",
-        header: {
-          "Content-Type": "application/json"
-        }
-      })
+      const params = new URLSearchParams();
+      params.append("customerId", sessionStorage.getItem("userId"));
+      params.append("status", sessionStorage.getItem("QueryOrdersType"));
+      this.$axios
+        .post(this.$store.state.ORDER_SERVER_API_URL + "/order/get/id", params)
         .then(function(response) {
           console.log(response.data);
           that.goodsList = response.data.data;
@@ -108,9 +114,32 @@ export default {
         })
         .catch(function(error) {
           console.log(error);
-          // 出现错误
-          that.error = true;
         });
+    },
+    onClick(name) {
+      if (name !== 0) {
+        sessionStorage.setItem("QueryOrdersType", name);
+        this.getOrders();
+      } else {
+        Toast.fail("暂无后续逻辑");
+      }
+    },
+    handleClick(val) {
+      console.log(val);
+    },
+    onClickLeft() {
+      this.$router.push("/user");
+    },
+    onClickEvaluate(id) {
+      console.log(id);
+      Toast.fail("暂无后续逻辑");
+    },
+    onClickBuyAgain(id) {
+      sessionStorage.setItem("selectedProductId", id);
+      this.$router.push("/goods");
+    },
+    formatPrice(price) {
+      return "总价：¥" + price.toFixed(2);
     }
   },
   computed: {},

@@ -129,8 +129,8 @@ export default {
         });
     },
     onClickSearchBar() {
-      console.log(this.imgPrefix + "/banner/banner1.jpg");
       console.log("点击了search");
+      this.$router.push("/search");
     },
     handleClick(id) {
       console.log("点击了卡片" + id);

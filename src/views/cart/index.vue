@@ -96,6 +96,14 @@ export default {
   methods: {
     init() {
       const that = this;
+      if (sessionStorage.getItem("userId") === null) {
+        Toast.fail("请先登录");
+        setTimeout(function() {
+          Toast.clear();
+          that.$router.push("/login");
+        }, 1500);
+        return;
+      }
       const data = {
         number: sessionStorage.getItem("userId")
       };
@@ -167,7 +175,14 @@ export default {
     },
 
     totalPrice() {
-      let total = this.goods.reduce((total, item) => total + (this.checkedGoods.indexOf(item.productId) !== -1 ? item.price * 100 * item.numbers : 0), 0);
+      let total = this.goods.reduce(
+        (total, item) =>
+          total +
+          (this.checkedGoods.indexOf(item.productId) !== -1
+            ? item.price * 100 * item.numbers
+            : 0),
+        0
+      );
       sessionStorage.setItem("total", total / 100);
       return total;
     }

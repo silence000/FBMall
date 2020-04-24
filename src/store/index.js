@@ -5,10 +5,10 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    IMAGES_SERVER_API_URL: "http://192.168.0.105:8890/img",
-    PRODUCT_SERVER_API_URL: "http://192.168.0.105:8891",
-    USERS_SERVER_API_URL: "http://192.168.0.105:8892",
-    ORDER_SERVER_API_URL: "http://192.168.0.105:8893"
+    IMAGES_SERVER_API_URL: "http://192.168.0.106:8890/img",
+    PRODUCT_SERVER_API_URL: "http://192.168.0.106:8891",
+    USERS_SERVER_API_URL: "http://192.168.0.106:8892",
+    ORDER_SERVER_API_URL: "http://192.168.0.106:8893"
   },
   mutations: {},
   actions: {},

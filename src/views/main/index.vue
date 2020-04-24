@@ -6,7 +6,6 @@
         background="#39a9ed"
         shape="round"
         disabled
-        class=""
         @click="onClickSearchBar"
       ></van-search>
     </div>
@@ -126,8 +125,8 @@ export default {
     return {
       imgPrefix: this.$store.state.IMAGES_SERVER_API_URL,
       images: [
-        "http://192.168.0.105:8890/img/banner/banner1.jpg",
-        "http://192.168.0.105:8890/img/banner/banner2.jpg"
+        "http://localhost:8890/img/banner/banner1.jpg",
+        "http://localhost:8890/img/banner/banner2.jpg"
       ],
       goodsList: [],
       loading: false,
@@ -140,8 +139,8 @@ export default {
   },
   methods: {
     onClickSearchBar() {
-      console.log(this.imgPrefix + "/banner/banner1.jpg");
       console.log("点击了search");
+      this.$router.push("/search");
     },
     onClickClassify() {
       this.$router.push("/sort");

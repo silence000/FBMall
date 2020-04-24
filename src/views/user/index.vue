@@ -10,25 +10,30 @@
     </div>
     <van-row class="user-links">
       <van-col span="6">
-        <van-icon name="pending-payment"></van-icon>
+        <van-icon name="pending-payment" @click="onClickMyPoints"></van-icon>
         待付款
       </van-col>
       <van-col span="6">
-        <van-icon name="records"></van-icon>
+        <van-icon name="records" @click="onClickCheckOrders(1)"></van-icon>
         待发货
       </van-col>
       <van-col span="6">
-        <van-icon name="logistics"></van-icon>
+        <van-icon name="logistics" @click="onClickCheckOrders(2)"></van-icon>
         已发货
       </van-col>
       <van-col span="6">
-        <van-icon name="completed"></van-icon>
+        <van-icon name="completed" @click="onClickCheckOrders(3)"></van-icon>
         已完成
       </van-col>
     </van-row>
 
     <van-cell-group class="user-group">
-      <van-cell icon="records" title="全部订单" is-link @click="onClickAllOrders"></van-cell>
+      <van-cell
+        icon="records"
+        title="全部订单"
+        is-link
+        @click="onClickCheckOrders(0)"
+      ></van-cell>
     </van-cell-group>
 
     <van-cell-group>
@@ -44,7 +49,12 @@
         is-link
         @click="onClickMyTicket"
       ></van-cell>
-      <!--      <van-cell icon="gift-o" title="我收到的礼物" is-link></van-cell>-->
+      <van-cell
+        icon="friends-o"
+        title="退出登录"
+        is-link
+        @click="onClickLogOut"
+      ></van-cell>
     </van-cell-group>
 
     <van-tabbar v-model="active">
@@ -81,16 +91,29 @@ export default {
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup
   },
-  mounted() {},
+  mounted() {
+    this.init();
+  },
   data() {
     return {
       active: 3,
       imgPrefix: this.$store.state.IMAGES_SERVER_API_URL,
-      username: sessionStorage.getItem("nickname"),
+      username: sessionStorage.getItem("nickname")
     };
   },
   methods: {
-    onClickAllOrders() {
+    init() {
+      const that = this;
+      if (sessionStorage.getItem("userId") === null) {
+        Toast.fail("请先登录");
+        setTimeout(function() {
+          Toast.clear();
+          that.$router.push("/login");
+        }, 1500);
+      }
+    },
+    onClickCheckOrders(val) {
+      sessionStorage.setItem("QueryOrdersType", val);
       this.$router.push("/orders");
     },
     onClickMyPoints() {
@@ -98,6 +121,10 @@ export default {
     },
     onClickMyTicket() {
       Toast.fail("暂无后续逻辑");
+    },
+    onClickLogOut() {
+      sessionStorage.clear();
+      this.$router.push("/login");
     }
   },
   computed: {},
