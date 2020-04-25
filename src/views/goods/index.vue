@@ -212,6 +212,7 @@ export default {
       console.log("点击了立即购买");
       console.log("选中了商品: " + sessionStorage.getItem("selectedProductId"));
       console.log(sku.selectedNum);
+      Toast("暂无后续逻辑~");
     },
 
     onAddCartClicked(sku) {

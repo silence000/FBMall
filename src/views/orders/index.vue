@@ -126,6 +126,8 @@ export default {
     },
     handleClick(val) {
       console.log(val);
+      sessionStorage.setItem("selectedProductId", val);
+      this.$router.push("/goods");
     },
     onClickLeft() {
       this.$router.push("/user");

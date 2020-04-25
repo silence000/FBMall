@@ -3,7 +3,7 @@
     <div class="img">
       <img
         class="user-poster"
-        src="http://localhost:8890/img/user/user-bg.jpg"
+        src="http://localhost:8898/fbmall-images/img/user/user-bg.jpg"
         alt="userImg"
       />
       <p>{{ username }}</p>

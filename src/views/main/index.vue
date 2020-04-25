@@ -125,8 +125,8 @@ export default {
     return {
       imgPrefix: this.$store.state.IMAGES_SERVER_API_URL,
       images: [
-        "http://localhost:8890/img/banner/banner1.jpg",
-        "http://localhost:8890/img/banner/banner2.jpg"
+        "http://localhost:8898/fbmall-images/img/banner/banner1.jpg",
+        "http://localhost:8898/fbmall-images/img/banner/banner2.jpg"
       ],
       goodsList: [],
       loading: false,
